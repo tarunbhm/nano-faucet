@@ -8,6 +8,10 @@ module.exports = {
     let gas = new web3.utils.BN(TRANSACTION_GAS)
     let gasPrice = new web3.utils.BN(TRANSACTION_GAS_PRICE)
     let chainId = await web3.eth.net.getId()
+    
+    const nonce = await web3.eth.getTransactionCount(from, "pending")
+    const nonceHex = web3.utils.toHex(nonce)
+    console.log("transaction nonce", nonce, nonceHex);
 
     const tx = {
       from,
@@ -15,7 +19,8 @@ module.exports = {
       gas: gas.toString(),
       gasPrice: gasPrice.toString(),
       value,
-      chainId
+      chainId,
+      nonce: nonceHex
     }
 
     return web3.eth.accounts.signTransaction(tx, `0x${key}`)
